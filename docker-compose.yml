@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  # API Service
+  api:
+    build: .
+    container_name: node-api
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/robinhood
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  # MongoDB Service
+  mongo:
+    image: mongo:latest
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+# Volume to persist MongoDB data
+volumes:
+  mongo-data:
